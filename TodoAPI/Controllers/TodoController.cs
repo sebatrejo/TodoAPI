@@ -9,6 +9,7 @@ using TodoAPI.Models;
 
 namespace TodoAPI.Controllers
 {
+    [Produces("application/json")]//las acciones del controlador admiten un contenido de respuesta de tipo application/json
     [Route("api/[controller]")]
     [ApiController]
     public class TodoController : ControllerBase
@@ -49,8 +50,23 @@ namespace TodoAPI.Controllers
             return todoItem;
         }
 
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Todo
+        ///     {
+        ///        "id": 1,
+        ///        "name": "Item1",
+        ///        "isComplete": true
+        ///     }
+        ///
+        /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response> 
         // POST: api/Todo
         [HttpPost]
+        [ProducesResponseType(201)]
+        [ProducesResponseType(400)]
         public async Task<ActionResult<TodoItem>> PostTodoItem(TodoItem item)
         {
             _context.TodoItems.Add(item);
@@ -74,6 +90,9 @@ namespace TodoAPI.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Elimina un TodoItem específico
+        /// </summary>
         // DELETE: api/Todo/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTodoItem(long id)
